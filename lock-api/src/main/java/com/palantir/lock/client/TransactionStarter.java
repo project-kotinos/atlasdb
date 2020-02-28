@@ -26,7 +26,6 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import com.google.common.annotations.VisibleForTesting;
-import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Sets;
 import com.google.common.collect.Streams;
 import com.palantir.atlasdb.autobatch.Autobatchers;
@@ -86,19 +85,14 @@ final class TransactionStarter implements AutoCloseable {
                 reduceForRefresh(lockTokenShares),
                 lockTokens));
 
-        Set<LockToken> resultLockTokenShares = lockTokenShares.stream()
-                .filter(t -> refreshedTokens.contains(t.sharedLockToken()))
-                .collect(Collectors.toSet());
-        Set<LockToken> resultLockTokens = lockTokens.stream()
-                .filter(refreshedTokens::contains)
-                .collect(Collectors.toSet());
+        Set<LockTokenShare> resultLockTokenShares = Sets.filter(lockTokenShares, refreshedTokens::contains);
+        Set<LockToken> resultLockTokens = Sets.filter(lockTokens, refreshedTokens::contains);
 
         return Sets.union(resultLockTokenShares, resultLockTokens);
     }
 
     Set<LockToken> unlock(Set<LockToken> tokens) {
         Set<LockToken> lockTokens = filterOutTokenShares(tokens);
-
         Set<LockTokenShare> lockTokenShares = filterLockTokenShares(tokens);
 
         Set<LockToken> toUnlock = reduceForUnlock(lockTokenShares);
@@ -112,7 +106,7 @@ final class TransactionStarter implements AutoCloseable {
                 t -> unlocked.contains(t.sharedLockToken()) || refreshed.contains(t.sharedLockToken()));
         Set<LockToken> resultLockTokens = Sets.intersection(lockTokens, unlocked);
 
-        return ImmutableSet.copyOf(Sets.union(resultLockTokenShares, resultLockTokens));
+        return Sets.union(resultLockTokenShares, resultLockTokens).immutableCopy();
     }
 
     /**
@@ -202,8 +196,7 @@ final class TransactionStarter implements AutoCloseable {
     }
 
     private static Set<LockToken> filterOutTokenShares(Set<LockToken> tokens) {
-        return tokens.stream().filter(t -> !isLockTokenShare(t))
-                .collect(Collectors.toSet());
+        return Sets.filter(tokens, (LockToken t) -> !isLockTokenShare(t));
     }
 
     private static boolean isLockTokenShare(LockToken lockToken) {
