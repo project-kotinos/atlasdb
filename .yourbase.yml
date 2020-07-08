@@ -1,0 +1,16 @@
+build_targets:
+- commands:
+  - ./scripts/circle-ci/download-moreutils.sh
+  - ./scripts/time-cmd.sh ./gradlew --profile --parallel --stacktrace classes testClasses
+  container:
+    image: yourbase/yb_ubuntu:18.04
+  name: default
+
+ci:
+  builds:
+  - build_target: default
+    name: default
+dependencies:
+  build:
+  - java:11.0.6
+  - gradle:6.5.1
