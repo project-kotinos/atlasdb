@@ -2,6 +2,13 @@ build_targets:
 - commands:
   - ./scripts/circle-ci/download-moreutils.sh
   - ./scripts/time-cmd.sh ./gradlew --profile --parallel --stacktrace classes testClasses
+  - mkdir -p $CIRCLE_ARTIFACTS
+  - ./scripts/circle-ci/pull-all-images.sh
+  - ./scripts/circle-ci/track-memory-usage.sh
+  - ./scripts/circle-ci/monitor-all-processes.sh
+  - ./scripts/circle-ci/download-moreutils.sh
+  - ./scripts/time-cmd.sh ./scripts/circle-ci/run-circle-tests.sh
+  - ./scripts/time-cmd.sh ./scripts/circle-ci/ensure-repo-clean.sh
   container:
     image: yourbase/yb_ubuntu:18.04
   name: default
