@@ -6,7 +6,6 @@ build_targets:
     image: yourbase/yb_ubuntu:18.04
   name: default
   environment:
-      - GRADLE_OPTS="-Dorg.gradle.console=plain -Dorg.gradle.internal.launcher.welcomeMessageEnabled=false"
       - CIRCLE_TEST_REPORTS=/home/circleci/junit
       - CIRCLE_ARTIFACTS=/home/circleci/artifacts
 ci:
