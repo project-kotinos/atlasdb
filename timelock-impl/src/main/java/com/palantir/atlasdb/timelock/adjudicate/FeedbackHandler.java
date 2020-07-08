@@ -16,6 +16,13 @@
 
 package com.palantir.atlasdb.timelock.adjudicate;
 
+import com.github.benmanes.caffeine.cache.Caffeine;
+import com.google.common.annotations.VisibleForTesting;
+import com.google.common.collect.Maps;
+import com.palantir.common.streams.KeyedStream;
+import com.palantir.paxos.Client;
+import com.palantir.timelock.feedback.ConjureTimeLockClientFeedback;
+import com.palantir.timelock.feedback.EndpointStatistics;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
@@ -24,15 +31,6 @@ import java.util.concurrent.TimeUnit;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
-
-import com.github.benmanes.caffeine.cache.Caffeine;
-import com.google.common.annotations.VisibleForTesting;
-import com.google.common.collect.ImmutableMap;
-import com.google.common.collect.Maps;
-import com.palantir.common.streams.KeyedStream;
-import com.palantir.paxos.Client;
-import com.palantir.timelock.feedback.ConjureTimeLockClientFeedback;
-import com.palantir.timelock.feedback.EndpointStatistics;
 
 public class FeedbackHandler {
 

@@ -16,12 +16,11 @@
 
 package com.palantir.atlasdb.timelock.adjudicate;
 
-import java.util.List;
-import java.util.UUID;
-
 import com.github.benmanes.caffeine.cache.Cache;
 import com.google.common.collect.ImmutableList;
 import com.palantir.timelock.feedback.ConjureTimeLockClientFeedback;
+import java.util.List;
+import java.util.UUID;
 
 public final class TimeLockClientFeedbackSink {
     private Cache<UUID, ConjureTimeLockClientFeedback> trackedFeedbackReports;
